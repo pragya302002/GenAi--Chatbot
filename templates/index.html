@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>GenAI Chatbot</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#f4f4f4;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+}
+
+.chat-container{
+width:420px;
+background:white;
+border-radius:10px;
+padding:20px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+#chatbox{
+height:320px;
+overflow-y:auto;
+border:1px solid #ddd;
+padding:10px;
+margin-bottom:10px;
+}
+
+.message{
+margin:6px 0;
+}
+
+.user{
+color:blue;
+}
+
+.bot{
+color:green;
+}
+
+input{
+width:70%;
+padding:8px;
+}
+
+button{
+padding:8px 12px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="chat-container">
+
+<h3>Mini GenAI Chatbot</h3>
+
+<div id="chatbox"></div>
+
+<input id="question" placeholder="Ask something..." />
+<button onclick="send()">Send</button>
+
+</div>
+
+<script>
+
+async function send(){
+
+let question = document.getElementById("question").value
+let chatbox = document.getElementById("chatbox")
+
+if(question.trim()==="") return;
+
+chatbox.innerHTML += `<div class="message user">You: ${question}</div>`
+
+let response = await fetch(`/chat?query=${question}`)
+let data = await response.json()
+
+chatbox.innerHTML += `<div class="message bot">Bot: ${data.response}</div>`
+
+document.getElementById("question").value=""
+
+chatbox.scrollTop = chatbox.scrollHeight
+
+}
+
+document.getElementById("question").addEventListener("keypress", function(event) {
+if (event.key === "Enter") {
+send();
+}
+});
+
+</script>
+
+</body>
+</html>
